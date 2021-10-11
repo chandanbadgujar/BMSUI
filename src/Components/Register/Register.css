@@ -1,0 +1,12 @@
+.MarginTop{
+    margin-top: 20px !important;
+}
+
+.react-calendar.hide {
+    display: none;
+  }
+
+.clearFooter { 
+      clear: both; 
+      height: 140px; 
+}

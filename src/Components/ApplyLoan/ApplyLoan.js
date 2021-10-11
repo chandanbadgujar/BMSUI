@@ -1,17 +1,22 @@
 import React, { useEffect } from 'react';
 
 import useInput from '../../Hooks/useInput';
+import  './ApplyLoan.css';
 
 export default function ApplyLoan() {
     const isNotEmpty = value => value.trim() !== '';
 
-    const {
-        value: enteredLoanType,
-        isValid: loanTypeIsValid,
-        hasError: loanTypeInputHasError,
-        valueChangeHandler: loanTypeChangeHandler,
-        inputBlurHandler: loanTypeBlurHandler,
-        reset: loanTypeReset } = useInput(isNotEmpty);
+    function loanTypeChangeHandler() {
+        setToggleForm(!toggleFormState);
+    }
+
+    // const {
+    //     value: enteredLoanType,
+    //     isValid: loanTypeIsValid,
+    //     hasError: loanTypeInputHasError,
+    //     valueChangeHandler: loanTypeChangeHandler,
+    //     inputBlurHandler: loanTypeBlurHandler,
+    //     reset: loanTypeReset } = useInput(isNotEmpty);
     const {
         value: enteredLoanAmt,
         isValid: loanAmtIsValid,
@@ -140,7 +145,8 @@ export default function ApplyLoan() {
         reset: companyExpReset } = useInput(isNotEmpty);
 
     const [loanTypeState, setLoanType] = React.useState('');
-    //const [selectedLoanTypeState, setSelectedLoanType] = React.useState('');
+    const [selectedLoanTypeState, setSelectedLoanType] = React.useState('');
+    const [toggleFormState, setToggleForm] = React.useState(false);
 
     useEffect(() => {
         getLoanType();
@@ -150,7 +156,7 @@ export default function ApplyLoan() {
         const loanType = [
             { label: "Personal", value: 1 },
             { label: "Home", value: 2 },
-            { label: "Education", value: 2 }
+            { label: "Education", value: 3 }
         ];
 
         let loanTypeList = loanType.length > 0
@@ -179,13 +185,13 @@ export default function ApplyLoan() {
                             <div className="form-group">
                                 <label className="mb-1">Loan Type</label>
                                 <select name="loanType" className="form-control"
-                                    //onChange={e => setSelectedLoanType(e.target.value)}
-                                    value={enteredLoanType}
+                                    onChange={e => setSelectedLoanType(e.target.value)}
+                                    value={selectedLoanTypeState}
                                     onChange={loanTypeChangeHandler}
-                                    onBlur={loanTypeBlurHandler}>
+                                    //onBlur={loanTypeBlurHandler}
+                                    >
                                     {loanTypeState}
                                 </select>
-                                {loanTypeInputHasError && <p className="error-text">Loan Type required!</p>}
                             </div>
                         </div>
                         <div className="col md6 border-right">
@@ -227,7 +233,8 @@ export default function ApplyLoan() {
                         <div className="col md6 border-right">
                             <div className="form-group">
                                 <label className="mb-1">Rate of Interest</label>
-                                <input type="text" className="form-control" placeholder="Enter Rate of Interest"
+                                <input type="text" className="form-control" placeholder="Rate of Interest"
+                                readOnly={true}
                                     value={enteredInterestRate}
                                     onChange={interestRateChangeHandler}
                                     onBlur={interestRateBlurHandler}></input>
@@ -245,7 +252,8 @@ export default function ApplyLoan() {
                             </div>
                         </div>
                     </div>
-
+                    
+                    <div style={{display: toggleFormState ? 'block' : 'none'}}>
                     <div className="row">
                         <div className="col md12 border-right">
                             <h6> Education Loan </h6>
@@ -343,7 +351,7 @@ export default function ApplyLoan() {
                             </div>
                         </div>
                     </div>
-
+                    </div>
                     <div className="row">
                         <div className="col md12 border-right">
                             <h6> Personal/Home Loan </h6>
@@ -414,13 +422,14 @@ export default function ApplyLoan() {
                         </div>
                         <div className="col md6 border-right">
                             <div className="form-group">
-                                <button type="button" className="btn btn-primary shadow w-100">Save</button>
+                                <button type="button" className="btn btn-outline-primary shadow w-100">Save</button>
                             </div>
                         </div>
                     </div>
 
                 </div>
             </div>
+            <div className="clearFooter"></div>
         </div>
     )
 }

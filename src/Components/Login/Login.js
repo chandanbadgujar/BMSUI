@@ -1,9 +1,19 @@
 import React, { Component, useEffect } from 'react';
 
 import useInput from '../../Hooks/useInput';
+import './Login.css';
+import { useHistory, Redirect } from "react-router-dom";
 
 export default function Login() {
+    const [redirect, setRedirect] = React.useState(false);
     const isNotEmpty = value => value.trim() !== '';
+    const history = useHistory();
+
+    const routeChange = () => {
+        let path = `home`;
+        //history.push(path);
+        window.location.href = '/';
+    }
 
     const {
         value: enteredUsername,
@@ -33,23 +43,31 @@ export default function Login() {
         formIsValid = true;
     }
 
-    // const usernameClasses = usernameInputHasError ? 'form-control invalid' : 'form-control';
-    // const passwordClasses = passwordInputHasError ? 'form-control invalid' : 'form-control';
-
-    const formSubmissionHandler = (event) => {
+    const formSubmissionHandler = async (event) => {
         event.preventDefault();
 
         if (!formIsValid) {
             return;
         }
 
-        console.log(enteredUsername);
-        console.log(enteredPassword);
+        let res = await fetch("http://localhost:12296/api/Auth/login", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+                "username": enteredUsername,
+                "password": enteredPassword
+            }),
+        }).then(() => {
+            //let response = await res.json();
+            setRedirect(true);
+        });
 
-        usernameReset();
-        pwdReset();
     };
 
+    if (redirect) {
+        return <Redirect to="/" />;
+    } 
     return (
         <form onSubmit={formSubmissionHandler}>
             <div className='container mt4'>
@@ -87,13 +105,16 @@ export default function Login() {
                             <div className="col md3 border-right"></div>
                         </div>
 
-                        <div className="row" style={{ marginTop: 20 }}>
+                        <div className="row MarginTop">
                             <div className="col md8 border-right"></div>
 
                             <div className="col md2 border-right">
                                 <div className="form-group">
-                                    <button disabled={!formIsValid} className="btn btn-primary shadow w-100">Login</button>
+                                    <button disabled={!formIsValid} className="btn btn-outline-primary shadow w-100">Login</button>
                                 </div>
+                                {/* <div className="form-group">
+                                    <button onClick={routeChange} className="btn btn-outline-primary shadow w-100">Redirect to Home</button>
+                                </div> */}
                             </div>
 
                             <div className="col md2 border-right"></div>
@@ -101,6 +122,7 @@ export default function Login() {
                     </div>
                 </div>
             </div>
+
         </form >
     )
 }

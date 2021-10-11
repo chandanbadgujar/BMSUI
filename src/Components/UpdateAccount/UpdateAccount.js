@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 
 import useInput from '../../Hooks/useInput';
+import './UpdateAccount.css';
 
 export default function UpdateAccount() {
     const isNotEmpty = value => value.trim() !== '';
@@ -628,24 +629,19 @@ export default function UpdateAccount() {
                         </div>
                     </div>
 
-
-
-
-
-
-
-                    <div className="row">
+                    <div className="row MarginTop">
                         <div className="col md6 border-right">
                         </div>
                         <div className="col md6 border-right">
                             <div className="form-group">
-                                <button type="button" className="btn btn-primary shadow w-100">Save</button>
+                                <button type="button" className="btn btn-outline-primary shadow w-100">Save</button>
                             </div>
                         </div>
                     </div>
 
                 </div>
             </div>
+            <div className="clearFooter"></div>
         </div>
     )
 }
