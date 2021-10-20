@@ -93,7 +93,7 @@ export default function Login() {
                                     {usernameInputHasError &&
                                         <p className="error-text">Username required!</p>}
                                     <label className="mb-1">Password</label>
-                                    <input type="text" className="form-control" placeholder="Enter Password"
+                                    <input type="password" className="form-control" placeholder="Enter Password"
                                         onChange={pwdChangeHandler}
                                         onBlur={pwdBlurHandler}
                                         value={enteredPassword}></input>

@@ -7,8 +7,75 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import Moment from 'moment';
 import { Redirect } from 'react-router-dom';
+import DropdownModel from '../../Models/DropdownModel';
 
 export default function Register() {
+    let guardianTypes = [
+        new DropdownModel("Natural guardians", 1),
+        new DropdownModel("Testamentary guardians", 2),
+        new DropdownModel("Guardians appointed or declared by the court", 3)
+    ];
+    let citizenships = [
+        new DropdownModel("Indian", 1),
+        new DropdownModel("Other", 2)
+    ];
+    let gender = [
+        new DropdownModel("Male", 1),
+        new DropdownModel("Female", 2)
+    ];
+    let maritalStatus = [
+        new DropdownModel("Married", 1),
+        new DropdownModel("unMarried", 2),
+        new DropdownModel("Widowed", 3)
+    ];
+    let countries = [
+        new DropdownModel("India", 1),
+        new DropdownModel("USA", 2)
+    ];
+    let states = [
+        new DropdownModel("Maharashtra", 1),
+        new DropdownModel("Goa", 2),
+        new DropdownModel("California", 3),
+        new DropdownModel("Texas", 4)
+    ];
+    let accountTypes = [
+        new DropdownModel("Salay", 1),
+        new DropdownModel("Savings", 2)
+    ];
+    let idProofType = [
+        new DropdownModel("Aadhar", 1),
+        new DropdownModel("Pan", 2)
+    ];
+
+    //#region states
+
+    const [guardianTypeState, setguardianType] = React.useState([]);
+    const [selectedGuardianTypeState, setSelectedguardianType] = React.useState(guardianTypes[0].value);
+
+    const [citizenshipTypeState, setCitizenshipType] = React.useState('');
+    const [selectedCitizenshipState, setSelectedCitizenship] = React.useState(citizenships[0].value);
+    const [citizenshipStatusState, setCitizenshipStatus] = React.useState('');
+
+    const [genderTypeState, setGenderType] = React.useState('');
+    const [selectedGenderState, setSelectedGender] = React.useState(gender[0].value);
+
+    const [maritalStatusTypeState, setMaritalStatusType] = React.useState('');
+    const [selectedMaritalStatusState, setSelectedMaritalStatus] = React.useState(maritalStatus[0].value);
+    
+    const [countryTypeState, setCountryType] = React.useState('');
+    const [selectedCountryState, setSelectedCountry] = React.useState(countries[0].value);
+
+    const [stateTypeState, setStateType] = React.useState('');
+    const [selectedStateState, setSelectedState] = React.useState(states[0].value);
+
+    const [accountTypeState, setAccountType] = React.useState('');
+    const [selectedAccountTypeState, setSelectedAccountType] = React.useState(accountTypes[0].value);
+
+    const [idProofTypeState, setIdProofType] = React.useState('');
+    const [selectedIdProofTypeState, setSelectedIdProofType] = React.useState(idProofType[0].value);
+    //#endregion
+   
+    //#region validation functions
     const isNotEmpty = value => value.trim() !== '';
     const isNameValid = value => {
         var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?1234567890]+/;
@@ -16,7 +83,7 @@ export default function Register() {
     };
     const isContactNoValid = value => {
         var pattern = new RegExp(/^[0-9\b]+$/);
-        return value.trim() !== '' && pattern.test(value) && !(value.length < 10);
+        return value.trim() !== '' && pattern.test(value) && (value.length == 10);
     };
     const isDepositValid = value => {
         var pattern = new RegExp(/^[0-9\b]+$/);
@@ -26,35 +93,31 @@ export default function Register() {
         return value.trim() !== '' && (value.includes('@') && value.includes('.'));
     };
     const isPanValid = value => {
-        if (enteredIdProof == '1') {
+        if (selectedIdProofTypeState == '1') {
             var pattern = new RegExp(/^[0-9\b]+$/);
             return value.trim() !== '' && pattern.test(value) && !(value.length < 12);
-        } else if (enteredIdProof == '2') {
+        } else if (selectedIdProofTypeState == '2') {
             var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
             return value.trim() !== '' && !format.test(value);
         }
 
         return value.trim() !== '' && (value.includes('@') && value.includes('.'));
     };
-
-    const dispatch = useDispatch();
-
     function calculateAge(dob) {
         var dob = new Date(dob);
         var month_diff = Date.now() - dob.getTime();
-
+        
         var age_dt = new Date(month_diff);
-
+        
         var year = age_dt.getUTCFullYear();
-
+        
         var age = Math.abs(year - 1970);
-
+        
         return age;
     }
-
     function setCitizenStatus(dob) {
         const age = calculateAge(dob);
-
+        
         if (age < 18) {
             setCitizenshipStatus('Minor');
         } else if (age >= 18 && age <= 60) {
@@ -63,7 +126,11 @@ export default function Register() {
             setCitizenshipStatus('Senior');
         }
     }
-
+    //#endregion
+    
+    const dispatch = useDispatch();
+    
+    //#region useInput
     const {
         value: enteredName,
         isValid: nameIsValid,
@@ -86,13 +153,6 @@ export default function Register() {
         inputBlurHandler: pwdBlurHandler,
         reset: pwdReset } = useInput(isNotEmpty);
     const {
-        value: enteredGuardianType,
-        isValid: guardianTypeIsValid,
-        hasError: guardianTypeHasError,
-        valueChangeHandler: guardianTypeChangeHandler,
-        inputBlurHandler: guardianTypeBlurHandler,
-        reset: guardianTypeReset } = useInput(isNotEmpty);
-    const {
         value: enteredGuardianTypeName,
         isValid: guardianTypeNameIsValid,
         hasError: guardianTypeNameHasError,
@@ -107,47 +167,12 @@ export default function Register() {
         inputBlurHandler: addressBlurHandler,
         reset: addressReset } = useInput(isNotEmpty);
     const {
-        value: enteredCitizenshipType,
-        isValid: citizenshipTypeIsValid,
-        hasError: citizenshipTypeHasError,
-        valueChangeHandler: citizenshipTypeChangeHandler,
-        inputBlurHandler: citizenshipTypeBlurHandler,
-        reset: citizenshipTypeReset } = useInput(isNotEmpty);
-    const {
-        value: enteredState,
-        isValid: stateIsValid,
-        hasError: stateHasError,
-        valueChangeHandler: stateChangeHandler,
-        inputBlurHandler: stateBlurHandler,
-        reset: stateReset } = useInput(isNotEmpty);
-    const {
-        value: enteredCountry,
-        isValid: countryIsValid,
-        hasError: countryHasError,
-        valueChangeHandler: countryChangeHandler,
-        inputBlurHandler: countryBlurHandler,
-        reset: countryReset } = useInput(isNotEmpty);
-    const {
         value: enteredEmail,
         isValid: emailIsValid,
         hasError: emailHasError,
         valueChangeHandler: emailChangeHandler,
         inputBlurHandler: emailBlurHandler,
         reset: emailReset } = useInput(isEmailIdValid);
-    const {
-        value: enteredGender,
-        isValid: genderIsValid,
-        hasError: genderHasError,
-        valueChangeHandler: genderChangeHandler,
-        inputBlurHandler: genderBlurHandler,
-        reset: genderReset } = useInput(isNotEmpty);
-    const {
-        value: enteredMaritalStatus,
-        isValid: maritalStatusIsValid,
-        hasError: maritalStatusHasError,
-        valueChangeHandler: maritalStatusChangeHandler,
-        inputBlurHandler: maritalStatusBlurHandler,
-        reset: maritalStatusReset } = useInput(isNotEmpty);
     const {
         value: enteredContactNo,
         isValid: contactNoIsValid,
@@ -174,13 +199,6 @@ export default function Register() {
         return enteredDob !== undefined;
     }
     const {
-        value: enteredAccountType,
-        isValid: accountTypeIsValid,
-        hasError: accountTypeHasError,
-        valueChangeHandler: accountTypeChangeHandler,
-        inputBlurHandler: accountTypeBlurHandler,
-        reset: accountTypeReset } = useInput(isNotEmpty);
-    const {
         value: enteredBranchName,
         isValid: branchNameIsValid,
         hasError: branchNameHasError,
@@ -194,13 +212,6 @@ export default function Register() {
         valueChangeHandler: depositAmtChangeHandler,
         inputBlurHandler: depositAmtBlurHandler,
         reset: depositAmtReset } = useInput(isDepositValid);
-    const {
-        value: enteredIdProof,
-        isValid: idProofIsValid,
-        hasError: idProofHasError,
-        valueChangeHandler: idProofChangeHandler,
-        inputBlurHandler: idProofBlurHandler,
-        reset: idProofReset } = useInput(isNotEmpty);
     const {
         value: enteredIdDocNo,
         isValid: idDocNoIsValid,
@@ -233,31 +244,9 @@ export default function Register() {
     const [redirect, setRedirect] = React.useState(false);
 
     const [enteredDob, setEnteredDob] = React.useState(new Date());
-    const [guardianTypeState, setguardianType] = React.useState('');
-    // const [selectedGuardianTypeState, setSelectedguardianType] = React.useState('');
 
-    const [citizenshipTypeState, setCitizenshipType] = React.useState('');
-    //const [selectedCitizenshipState, setSelectedCitizenship] = React.useState('');
-    const [citizenshipStatusState, setCitizenshipStatus] = React.useState('');
-
-    const [stateTypeState, setStateType] = React.useState('');
-    //const [selectedStateState, setSelectedState] = React.useState('');
-
-    const [countryTypeState, setCountryType] = React.useState('');
-    //const [selectedCountryState, setSelectedCountry] = React.useState('');
-
-    const [genderTypeState, setGenderType] = React.useState('');
-    //const [selectedGenderState, setSelectedGender] = React.useState('');
-
-    const [maritalStatusTypeState, setMaritalStatusType] = React.useState('');
-    //const [selectedMaritalStatusState, setSelectedMaritalStatus] = React.useState('');
-
-    const [accountTypeState, setAccountType] = React.useState('');
-    //const [selectedAccountTypeState, setSelectedAccountType] = React.useState('');
-
-    const [idProofTypeState, setIdProofType] = React.useState('');
-    //const [selectedIdProofTypeState, setSelectedIdProofType] = React.useState('');
-
+    //#endregion
+   
     useEffect(() => {
         getGuardianTypes();
         getCitizenship();
@@ -269,135 +258,103 @@ export default function Register() {
         getIdProofType();
     }, []);
 
-    function getGuardianTypes() {
-        const guardianTypes = [
-            { label: "Natural guardians", value: 1 },
-            { label: "Testamentary guardians", value: 2 },
-            { label: "Guardians appointed or declared by the court", value: 3 }
-        ];
+//#region bind dropdowns
+function getGuardianTypes() {
+    let guardianTypesList = guardianTypes.length > 0
+        && guardianTypes.map((item, i) => {
+            return (
+                <option key={i} value={item.value}>{item.label}</option>
+            )
+        }, this);
 
-        let guardianTypesList = guardianTypes.length > 0
-            && guardianTypes.map((item, i) => {
-                return (
-                    <option key={i} value={item.value}>{item.label}</option>
-                )
-            }, this);
+    setguardianType(guardianTypesList);
+}
 
-        setguardianType(guardianTypesList);
-    }
+function getCitizenship() {
+    let citizenshipsList = citizenships.length > 0
+        && citizenships.map((item, i) => {
+            return (
+                <option key={i} value={item.value}>{item.label}</option>
+            )
+        }, this);
 
-    function getCitizenship() {
-        const citizenships = [
-            { label: "Indian", value: 1 },
-            { label: "Other", value: 2 }
-        ];
+    setCitizenshipType(citizenshipsList);
+}
 
-        let citizenshipsList = citizenships.length > 0
-            && citizenships.map((item, i) => {
-                return (
-                    <option key={i} value={item.value}>{item.label}</option>
-                )
-            }, this);
+function getState() {
+    let statesList = states.length > 0
+        && states.map((item, i) => {
+            return (
+                <option key={i} value={item.value}>{item.label}</option>
+            )
+        }, this);
 
-        setCitizenshipType(citizenshipsList);
-    }
+    setStateType(statesList);
+}
 
-    function getState() {
-        const states = [
-            { label: "Maharashtra", value: 1 },
-            { label: "Goa", value: 2 }
-        ];
+function getCountries() {
+    let countriesList = countries.length > 0
+        && countries.map((item, i) => {
+            return (
+                <option key={i} value={item.value}>{item.label}</option>
+            )
+        }, this);
 
-        let statesList = states.length > 0
-            && states.map((item, i) => {
-                return (
-                    <option key={i} value={item.value}>{item.label}</option>
-                )
-            }, this);
+    setCountryType(countriesList);
+}
 
-        setStateType(statesList);
-    }
+function getGender() {
+    let genderList = gender.length > 0
+        && gender.map((item, i) => {
+            return (
+                <option key={i} value={item.value}>{item.label}</option>
+            )
+        }, this);
 
-    function getCountries() {
-        const countries = [
-            { label: "India", value: 1 },
-            { label: "USA", value: 2 }
-        ];
+    setGenderType(genderList);
+}
 
-        let countriesList = countries.length > 0
-            && countries.map((item, i) => {
-                return (
-                    <option key={i} value={item.value}>{item.label}</option>
-                )
-            }, this);
+function getMaritalStatus() {
+    const maritalStatus = [
+        { label: "Married", value: 1 },
+        { label: "unMarried", value: 2 },
+        { label: "Widowed", value: 2 }
+    ];
 
-        setCountryType(countriesList);
-    }
+    let maritalStatusList = maritalStatus.length > 0
+        && maritalStatus.map((item, i) => {
+            return (
+                <option key={i} value={item.value}>{item.label}</option>
+            )
+        }, this);
 
-    function getGender() {
-        const gender = [
-            { label: "Male", value: 1 },
-            { label: "Female", value: 2 }
-        ];
+    setMaritalStatusType(maritalStatusList);
+}
 
-        let genderList = gender.length > 0
-            && gender.map((item, i) => {
-                return (
-                    <option key={i} value={item.value}>{item.label}</option>
-                )
-            }, this);
+function getAccountType() {
+  
 
-        setGenderType(genderList);
-    }
+    let accountTypesList = accountTypes.length > 0
+        && accountTypes.map((item, i) => {
+            return (
+                <option key={i} value={item.value}>{item.label}</option>
+            )
+        }, this);
 
-    function getMaritalStatus() {
-        const maritalStatus = [
-            { label: "Married", value: 1 },
-            { label: "unMarried", value: 2 },
-            { label: "Widowed", value: 2 }
-        ];
+    setAccountType(accountTypesList);
+}
 
-        let maritalStatusList = maritalStatus.length > 0
-            && maritalStatus.map((item, i) => {
-                return (
-                    <option key={i} value={item.value}>{item.label}</option>
-                )
-            }, this);
+function getIdProofType() {
+    let idProofTypeList = idProofType.length > 0
+        && idProofType.map((item, i) => {
+            return (
+                <option key={i} value={item.value}>{item.label}</option>
+            )
+        }, this);
 
-        setMaritalStatusType(maritalStatusList);
-    }
-
-    function getAccountType() {
-        const accountTypes = [
-            { label: "Salay", value: 1 },
-            { label: "Savings", value: 2 }
-        ];
-
-        let accountTypesList = accountTypes.length > 0
-            && accountTypes.map((item, i) => {
-                return (
-                    <option key={i} value={item.value}>{item.label}</option>
-                )
-            }, this);
-
-        setAccountType(accountTypesList);
-    }
-
-    function getIdProofType() {
-        const idProofType = [
-            { label: "Aadhar", value: 1 },
-            { label: "Pan", value: 2 }
-        ];
-
-        let idProofTypeList = idProofType.length > 0
-            && idProofType.map((item, i) => {
-                return (
-                    <option key={i} value={item.value}>{item.label}</option>
-                )
-            }, this);
-
-        setIdProofType(idProofTypeList);
-    }
+    setIdProofType(idProofTypeList);
+}
+//#endregion
 
     const formSubmissionHandler = (event) => {
         event.preventDefault();
@@ -410,6 +367,7 @@ export default function Register() {
             guardianTypeNameIsValid &&
             addressIsValid &&
             emailIsValid &&
+            addressIsValid &&
             contactNoIsValid &&
             branchNameIsValid &&
             depositAmtIsValid &&
@@ -427,32 +385,53 @@ export default function Register() {
                     "username": enteredUsername,
                     "password": enteredPassword,
                     "name": enteredName,
+                    "guardianType": parseInt(selectedGuardianTypeState),
                     "guardianName": enteredGuardianTypeName,
-                    "guardianType": parseInt(enteredGuardianType),
-                    "address": enteredAddress,
-                    "citizenshipType": parseInt(enteredCitizenshipType),
-                    "country": parseInt(enteredCountry),
-                    "state": parseInt(enteredState),
-                    "email": enteredEmail,
-                    "gender": parseInt(enteredGender),
-                    "maritalStatus": parseInt(enteredMaritalStatus),
-                    "contactNo": enteredContactNo,
+                    "gender": parseInt(selectedGenderState),
+                    "maritalStatus": parseInt(selectedMaritalStatusState),
                     "dob": enteredDob,
+                    "contactNo": enteredContactNo,
+                    "email": enteredEmail,
+                    "address": enteredAddress,
+                    "citizenshipType": parseInt(selectedCitizenshipState),
+                    "country": parseInt(selectedCountryState),
+                    "state": parseInt(selectedStateState),
+                    "accountType": parseInt(selectedAccountTypeState),
+                    "branchName": enteredBranchName,
                     "initialDeposit": parseInt(enteredDepositAmt),
-                    "accountType": parseInt(enteredAccountType)
+                    "identificationType":  parseInt(selectedIdProofTypeState),
+                    "identificationDocNo": selectedIdProofTypeState,
+                    "referralAccountName": enteredReferenceName,
+                    "referralAccountNo": enteredReferenceAcc,
+                    "referralAccountAddress": enteredReferenceAddress,
                 }),
                 headers: {
                     'Content-Type': 'application/json'
                 }
-            }).then(() => { 
-                setRedirect(true);
+            }).then(() => {
+                autoLoginUser();
             });
         }
 
         //TODO: POST using react-redux
     };
-    if(redirect) {
-        return <Redirect to="/login" />;
+
+    const autoLoginUser = async () => {
+        let res = await fetch("http://localhost:12296/api/Auth/login", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+                "username": enteredUsername,
+                "password": enteredPassword
+            }),
+        }).then(() => {
+            setRedirect(true);
+        });
+    }
+
+    if (redirect) {
+        return <Redirect to="/" />;
     }
 
     return (
@@ -462,7 +441,37 @@ export default function Register() {
                     <div className='card-body'>
                         <div className="row">
                             <div className="col md12 border-right">
-                                <h6>Customer Registration</h6>
+                                <h6>Registration</h6>
+                                <hr />
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col md6 border-right">
+                                <div className="form-group">
+                                    <label className="mb-1">Username</label>
+                                    <input type="text" className="form-control" placeholder="Enter Username"
+                                        value={enteredUsername}
+                                        onChange={usernameChangeHandler}
+                                        onBlur={usernameBlurHandler}></input>
+                                    {usernameInputHasError && <p className="error-text">Username required!</p>}
+                                </div>
+                            </div>
+                            <div className="col md6 border-right">
+                                <div className="form-group">
+                                    <label className="mb-1">Password</label>
+                                    <input type="password" className="form-control" placeholder="Enter Password"
+                                        value={enteredPassword}
+                                        onChange={pwdChangeHandler}
+                                        onBlur={pwdBlurHandler}></input>
+                                    {passwordInputHasError && <p className="error-text">Password required!</p>}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="row MarginTop">
+                            <div className="col md12 border-right">
+                                <h6>Personal Details</h6>
                                 <hr />
                             </div>
                         </div>
@@ -485,38 +494,12 @@ export default function Register() {
                         <div className="row">
                             <div className="col md6 border-right">
                                 <div className="form-group">
-                                    <label className="mb-1">Username</label>
-                                    <input type="text" className="form-control" placeholder="Enter Username"
-                                        value={enteredUsername}
-                                        onChange={usernameChangeHandler}
-                                        onBlur={usernameBlurHandler}></input>
-                                    {usernameInputHasError && <p className="error-text">Username required!</p>}
-                                </div>
-                            </div>
-                            <div className="col md6 border-right">
-                                <div className="form-group">
-                                    <label className="mb-1">Password</label>
-                                    <input type="text" className="form-control" placeholder="Enter Password"
-                                        value={enteredPassword}
-                                        onChange={pwdChangeHandler}
-                                        onBlur={pwdBlurHandler}></input>
-                                    {passwordInputHasError && <p className="error-text">Password required!</p>}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="row">
-                            <div className="col md6 border-right">
-                                <div className="form-group">
                                     <label className="mb-1">Gurdian Type</label>
                                     <select name="guardianType" className="form-control"
-                                        //onChange={e => setSelectedguardianType(e.target.value)}
-                                        value={enteredGuardianType}
-                                        onChange={guardianTypeChangeHandler}
-                                        onBlur={guardianTypeBlurHandler}>
+                                        onChange={e => setSelectedguardianType(e.target.value)}
+                                    >
                                         {guardianTypeState}
                                     </select>
-                                    {/* {guardianTypeHasError && <p className="error-text">Guardian type required!</p>} */}
                                 </div>
                             </div>
                             <div className="col md6 border-right">
@@ -528,6 +511,88 @@ export default function Register() {
                                         onBlur={guardianTypeNameBlurHandler}></input>
                                     {guardianTypeNameHasError && <p className="error-text">Guardian name required!</p>}
                                 </div>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col md6 border-right">
+                                <div className="form-group">
+                                    <label className="mb-1">Gender</label>
+                                    <select name="genderType" className="form-control"
+                                        onChange={e => setSelectedGender(e.target.value)}
+                                    >
+                                        {genderTypeState}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="col md6 border-right">
+                                <div className="form-group">
+                                    <label className="mb-1">Marital Status</label>
+                                    <select name="maritalStatusType" className="form-control"
+                                        onChange={e => setSelectedMaritalStatus(e.target.value)}
+                                    >
+                                        {maritalStatusTypeState}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col md6 border-right">
+                                <div className="form-group">
+                                    <label className="mb-1">DOB</label>
+                                    <input type="text" className="form-control" placeholder="Enter DOB"
+                                        value={Moment(enteredDob).format('DD/MM/YYYY')}
+                                        onFocus={() => setShowCalendar(true)}
+                                        readOnly
+                                    ></input>
+                                    <Calendar
+                                        value={''}
+                                        onChange={dobChangeHandler}
+                                        className={showCalendar ? "" : "hide"} />
+                                </div>
+                            </div>
+                            <div className="col md6 border-right">
+                                <div className="form-group">
+                                    <label className="mb-1">Citizen Status</label>
+                                    <input type="text" value={citizenshipStatusState} readOnly={true} className="form-control" placeholder="Enter Citizen Status"></input>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="row MarginTop">
+                            <div className="col md12 border-right">
+                                <h6>Contact</h6>
+                                <hr />
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col md6 border-right">
+                                <div className="form-group">
+                                    <label className="mb-1">Contact No.</label>
+                                    <input type="text" className="form-control" placeholder="Enter Contact No."
+                                        value={enteredContactNo}
+                                        onChange={contactNoChangeHandler}
+                                        onBlur={contactNoBlurHandler}></input>
+                                    {contactNoHasError && <p className="error-text">Contact no required! Only 10 digit no is allowed!</p>}
+                                </div>
+                            </div>
+                            <div className="col md6 border-right">
+                                <div className="form-group">
+                                    <label className="mb-1">Email Address</label>
+                                    <input type="text" className="form-control" placeholder="Enter Email Address"
+                                        value={enteredEmail}
+                                        onChange={emailChangeHandler}
+                                        onBlur={emailBlurHandler}></input>
+                                    {emailHasError && <p className="error-text">Email required!</p>}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="row MarginTop">
+                            <div className="col md12 border-right">
+                                <h6>Address</h6>
+                                <hr />
                             </div>
                         </div>
 
@@ -546,10 +611,11 @@ export default function Register() {
                                 <div className="form-group">
                                     <label className="mb-1">Citizenship</label>
                                     <select name="citizenshipType" className="form-control"
-                                        //onChange={e => setSelectedCitizenship(e.target.value)}
-                                        value={enteredCitizenshipType}
-                                        onChange={citizenshipTypeChangeHandler}
-                                        onBlur={citizenshipTypeBlurHandler}>
+                                        onChange={e => setSelectedCitizenship(e.target.value)}
+                                    //value={enteredCitizenshipType}
+                                    //onChange={citizenshipTypeChangeHandler}
+                                    //onBlur={citizenshipTypeBlurHandler}
+                                    >
                                         {citizenshipTypeState}
                                     </select>
                                     {/* {citizenshipTypeHasError && <p className="error-text">Citizenship type required!</p>} */}
@@ -562,117 +628,49 @@ export default function Register() {
                                 <div className="form-group">
                                     <label className="mb-1">Country</label>
                                     <select name="stateType" className="form-control"
-                                        //onChange={e => setSelectedCountry(e.target.value)}
-                                        value={enteredCountry}
-                                        onChange={countryChangeHandler}
-                                        onBlur={countryBlurHandler}>
+                                        onChange={e => setSelectedCountry(e.target.value)}
+                                        >
                                         {countryTypeState}
                                     </select>
-                                    {/* {countryHasError && <p className="error-text">Country required!</p>} */}
                                 </div>
                             </div>
                             <div className="col md6 border-right">
                                 <div className="form-group">
                                     <label className="mb-1">State</label>
                                     <select name="stateType" className="form-control"
-                                        //onChange={e => setSelectedState(e.target.value)}
-                                        value={enteredState}
-                                        onChange={stateChangeHandler}
-                                        onBlur={stateBlurHandler}>
+                                        onChange={e => setSelectedState(e.target.value)}
+                                        >
                                         {stateTypeState}
                                     </select>
-                                    {/* {stateHasError && <p className="error-text">State required!</p>} */}
                                 </div>
                             </div>
                         </div>
 
                         <div className="row">
+
                             <div className="col md6 border-right">
-                                <div className="form-group">
-                                    <label className="mb-1">Email Address</label>
-                                    <input type="text" className="form-control" placeholder="Enter Email Address"
-                                        value={enteredEmail}
-                                        onChange={emailChangeHandler}
-                                        onBlur={emailBlurHandler}></input>
-                                    {emailHasError && <p className="error-text">Email required!</p>}
-                                </div>
+
                             </div>
-                            <div className="col md6 border-right">
-                                <div className="form-group">
-                                    <label className="mb-1">Gender</label>
-                                    <select name="genderType" className="form-control"
-                                        //onChange={e => setSelectedGender(e.target.value)}
-                                        value={enteredGender}
-                                        onChange={genderChangeHandler}
-                                        onBlur={genderBlurHandler}>
-                                        {genderTypeState}
-                                    </select>
-                                    {/* {genderHasError && <p className="error-text">Gender required!</p>} */}
-                                </div>
+                        </div>
+
+                        <div className="row MarginTop">
+                            <div className="col md12 border-right">
+                                <h6>Account/Identification</h6>
+                                <hr />
                             </div>
                         </div>
 
                         <div className="row">
-                            <div className="col md6 border-right">
-                                <div className="form-group">
-                                    <label className="mb-1">Marital Status</label>
-                                    <select name="maritalStatusType" className="form-control"
-                                        //onChange={e => setSelectedMaritalStatus(e.target.value)}
-                                        value={enteredMaritalStatus}
-                                        onChange={maritalStatusChangeHandler}
-                                        onBlur={maritalStatusBlurHandler}>
-                                        {maritalStatusTypeState}
-                                    </select>
-                                    {/* {maritalStatusHasError && <p className="error-text">Marital Status required!</p>} */}
-                                </div>
-                            </div>
-                            <div className="col md6 border-right">
-                                <div className="form-group">
-                                    <label className="mb-1">Contact No.</label>
-                                    <input type="text" className="form-control" placeholder="Enter Contact No."
-                                        value={enteredContactNo}
-                                        onChange={contactNoChangeHandler}
-                                        onBlur={contactNoBlurHandler}></input>
-                                    {contactNoHasError && <p className="error-text">Contact no required! Only 10 digit no is allowed!</p>}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="row">
-                            <div className="col md6 border-right">
-                                <div className="form-group">
-                                    <label className="mb-1">DOB</label>
-                                    <input type="text" className="form-control" placeholder="Enter DOB"
-                                        value={Moment(enteredDob).format('DD/MM/YYYY')}
-                                        onFocus={() => setShowCalendar(true)}
-                                        readOnly
-                                    // onBlur={dobBlurHandler}
-                                    ></input>
-                                    <Calendar
-                                        value={''}
-                                        onChange={dobChangeHandler}
-                                        className={showCalendar ? "" : "hide"}
-                                    //onBlur={dobBlurHandler} 
-                                    />
-                                    {/* {dobHasError && <p className="error-text">DOB required!</p>} */}
-                                </div>
-                            </div>
                             <div className="col md6 border-right">
                                 <div className="form-group">
                                     <label className="mb-1">Account Type</label>
                                     <select name="maritalStatusType" className="form-control"
-                                        //onChange={e => setSelectedAccountType(e.target.value)}
-                                        value={enteredAccountType}
-                                        onChange={accountTypeChangeHandler}
-                                        onBlur={accountTypeBlurHandler}>
+                                        onChange={e => setSelectedAccountType(e.target.value)}
+                                        >
                                         {accountTypeState}
                                     </select>
-                                    {/* {accountTypeHasError && <p className="error-text">Account type required!</p>} */}
                                 </div>
                             </div>
-                        </div>
-
-                        <div className="row">
                             <div className="col md6 border-right">
                                 <div className="form-group">
                                     <label className="mb-1">Branch Name</label>
@@ -681,12 +679,6 @@ export default function Register() {
                                         onChange={branchNameChangeHandler}
                                         onBlur={branchNameBlurHandler}></input>
                                     {branchNameHasError && <p className="error-text">Branch name required!</p>}
-                                </div>
-                            </div>
-                            <div className="col md6 border-right">
-                                <div className="form-group">
-                                    <label className="mb-1">Citizen Status</label>
-                                    <input type="text" value={citizenshipStatusState} readOnly={true} className="form-control" placeholder="Enter Citizen Status"></input>
                                 </div>
                             </div>
                         </div>
@@ -706,13 +698,9 @@ export default function Register() {
                                 <div className="form-group">
                                     <label className="mb-1">Identification Proof Type</label>
                                     <select name="idProofType" className="form-control"
-                                        //onChange={e => setSelectedIdProofType(e.target.value)}
-                                        value={enteredIdProof}
-                                        onChange={idProofChangeHandler}
-                                        onBlur={idProofBlurHandler}>
+                                        onChange={e => setSelectedIdProofType(e.target.value)}>
                                         {idProofTypeState}
                                     </select>
-                                    {/* {idProofHasError && <p className="error-text">Id proof required!</p>} */}
                                 </div>
                             </div>
                         </div>

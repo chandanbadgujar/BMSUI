@@ -6,6 +6,7 @@ import './UpdateAccount.css';
 export default function UpdateAccount() {
     const isNotEmpty = value => value.trim() !== '';
 
+    //#region useInput
     const {
         value: enteredName,
         isValid: nameIsValid,
@@ -153,14 +154,15 @@ export default function UpdateAccount() {
         valueChangeHandler: guardianTypeChangeHandler,
         inputBlurHandler: guardianTypeBlurHandler,
         reset: guardianTypeReset } = useInput(isNotEmpty);
-        const {
-            value: guardianTypeName,
-            isValid: guardianTypeNameIsValid,
-            hasError: guardianTypeNameHasError,
-            valueChangeHandler: guardianTypeNameChangeHandler,
-            inputBlurHandler: guardianTypeNameBlurHandler,
-            reset: guardianTypeNameReset } = useInput(isNotEmpty);
+    const {
+        value: guardianTypeName,
+        isValid: guardianTypeNameIsValid,
+        hasError: guardianTypeNameHasError,
+        valueChangeHandler: guardianTypeNameChangeHandler,
+        inputBlurHandler: guardianTypeNameBlurHandler,
+        reset: guardianTypeNameReset } = useInput(isNotEmpty);
 
+    //#endregion
     const [countryTypeState, setCountryType] = React.useState('');
     //const [selectedCountryState, setSelectedCountry] = React.useState('');
 
@@ -332,18 +334,12 @@ export default function UpdateAccount() {
                 <div className='card-body'>
                     <div className="row">
                         <div className="col md12 border-right">
-                            <h6>Update Account</h6>
+                            <h6>Personal Details</h6>
                             <hr />
                         </div>
                     </div>
 
                     <div className="row">
-                        <div className="col md6 border-right">
-                            <div className="form-group">
-                                <label className="mb-1">Customer Id</label>
-                                <input type="text" className="form-control" placeholder="Customer Id"></input>
-                            </div>
-                        </div>
                         <div className="col md6 border-right">
                             <div className="form-group">
                                 <label className="mb-1">Name</label>
@@ -354,48 +350,37 @@ export default function UpdateAccount() {
                                 {nameInputHasError && <p className="error-text">Name required!</p>}
                             </div>
                         </div>
-                    </div>
-
-                    <div className="row">
                         <div className="col md6 border-right">
-                            <div className="form-group">
-                                <label className="mb-1">Account Number</label>
-                                <input type="text" className="form-control" placeholder="Enter Account Number"
-                                    value={enteredAccountNo}
-                                    onChange={accountNoChangeHandler}
-                                    onBlur={accountNoBlurHandler}></input>
-                                {accountNoInputHasError && <p className="error-text">Account no required!</p>}
-                            </div>
-                        </div>
-                        <div className="col md6 border-right">
-                            <div className="form-group">
-                                <label className="mb-1">Country</label>
-                                <select name="CountryType" className="form-control"
-                                    //onChange={e => setSelectedCountry(e.target.value)}
-                                    value={enteredCountry}
-                                    onChange={countryChangeHandler}
-                                    onBlur={countryBlurHandler}>
-                                    {countryTypeState}
-                                </select>
-                                {countryInputHasError && <p className="error-text">Country required!</p>}
-                            </div>
                         </div>
                     </div>
 
                     <div className="row">
                         <div className="col md6 border-right">
                             <div className="form-group">
-                                <label className="mb-1">State</label>
-                                <select name="stateType" className="form-control"
-                                    //onChange={e => setSelectedState(e.target.value)}
-                                    value={enteredState}
-                                    onChange={stateChangeHandler}
-                                    onBlur={stateBlurHandler}>
-                                    {stateTypeState}
+                                <label className="mb-1">Gurdian Type</label>
+                                <select name="guardianType" className="form-control"
+                                    //onChange={e => setSelectedguardianType(e.target.value)}
+                                    value={enteredGuardianType}
+                                    onChange={guardianTypeChangeHandler}
+                                    onBlur={guardianTypeBlurHandler}>
+                                    {guardianTypeState}
                                 </select>
-                                {stateHasError && <p className="error-text">State required!</p>}
+                                {guardianTypeHasError && <p className="error-text">Guardian type required!</p>}
                             </div>
                         </div>
+                        <div className="col md6 border-right">
+                            <div className="form-group">
+                                <label className="mb-1">Gurdian Name</label>
+                                <input type="text" className="form-control" placeholder="Enter Gurdian Name"
+                                    value={guardianTypeName}
+                                    onChange={guardianTypeNameChangeHandler}
+                                    onBlur={guardianTypeNameBlurHandler}></input>
+                                {guardianTypeNameHasError && <p className="error-text">Guardian name required!</p>}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="row">
                         <div className="col md6 border-right">
                             <div className="form-group">
                                 <label className="mb-1">Gender</label>
@@ -407,6 +392,19 @@ export default function UpdateAccount() {
                                     {genderTypeState}
                                 </select>
                                 {genderHasError && <p className="error-text">Gender required!</p>}
+                            </div>
+                        </div>
+                        <div className="col md6 border-right">
+                            <div className="form-group">
+                                <label className="mb-1">Marital Status</label>
+                                <select name="maritalStatusType" className="form-control"
+                                    //onChange={e => setSelectedMaritalStatus(e.target.value)}
+                                    value={enteredMaritalStatus}
+                                    onChange={maritalStatusChangeHandler}
+                                    onBlur={maritalStatusBlurHandler}>
+                                    {maritalStatusTypeState}
+                                </select>
+                                {maritalStatusHasError && <p className="error-text">Marital Status required!</p>}
                             </div>
                         </div>
                     </div>
@@ -424,12 +422,152 @@ export default function UpdateAccount() {
                         </div>
                         <div className="col md6 border-right">
                             <div className="form-group">
+                                <label className="mb-1">Citizen Status</label>
+                                <input type="text" className="form-control" placeholder="Enter Citizen Status"></input>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="row MarginTop">
+                        <div className="col md12 border-right">
+                            <h6>Contact</h6>
+                            <hr />
+                        </div>
+                    </div>
+
+                    <div className="row">
+                        <div className="col md6 border-right">
+                            <div className="form-group">
+                                <label className="mb-1">Contact No</label>
+                                <input type="text" className="form-control" placeholder="Enter Contact No"
+                                    value={enteredContactNo}
+                                    onChange={contactNoChangeHandler}
+                                    onBlur={contactNoBlurHandler}></input>
+                                {contactNoHasError && <p className="error-text">Contact no required!</p>}
+                            </div>
+                        </div>
+                        <div className="col md6 border-right">
+                            <div className="form-group">
+                                <label className="mb-1">Email Id</label>
+                                <input type="text" className="form-control" placeholder="Enter Email Id"
+                                    value={enteredEmail}
+                                    onChange={emailChangeHandler}
+                                    onBlur={emailBlurHandler}></input>
+                                {emailHasError && <p className="error-text">Email required!</p>}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="row MarginTop">
+                        <div className="col md12 border-right">
+                            <h6>Address</h6>
+                            <hr />
+                        </div>
+                    </div>
+
+                    <div className="row">
+                        <div className="col md6 border-right">
+                            <div className="form-group">
+                                <label className="mb-1">Address</label>
+                                <input type="text" className="form-control" placeholder="Enter Address"
+                                    value={enteredAddress}
+                                    onChange={addressChangeHandler}
+                                    onBlur={addressBlurHandler}></input>
+                                {addressHasError && <p className="error-text">Address required!</p>}
+                            </div>
+                        </div>
+                        <div className="col md6 border-right">
+                            <div className="form-group">
+                                <label className="mb-1">Citizenship</label>
+                                <select name="citizenshipType" className="form-control"
+                                    //onChange={e => setSelectedCitizenship(e.target.value)}
+                                    value={enteredCitizenshipType}
+                                    onChange={citizenshipTypeChangeHandler}
+                                    onBlur={citizenshipTypeBlurHandler}>
+                                    {citizenshipTypeState}
+                                </select>
+                                {citizenshipTypeHasError && <p className="error-text">Citizenship type required!</p>}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="row">
+                        <div className="col md6 border-right">
+                            <div className="form-group">
+                                <label className="mb-1">Country</label>
+                                <select name="CountryType" className="form-control"
+                                    //onChange={e => setSelectedCountry(e.target.value)}
+                                    value={enteredCountry}
+                                    onChange={countryChangeHandler}
+                                    onBlur={countryBlurHandler}>
+                                    {countryTypeState}
+                                </select>
+                                {countryInputHasError && <p className="error-text">Country required!</p>}
+                            </div>
+                        </div>
+                        <div className="col md6 border-right">
+                            <div className="form-group">
+                                <label className="mb-1">State</label>
+                                <select name="stateType" className="form-control"
+                                    //onChange={e => setSelectedState(e.target.value)}
+                                    value={enteredState}
+                                    onChange={stateChangeHandler}
+                                    onBlur={stateBlurHandler}>
+                                    {stateTypeState}
+                                </select>
+                                {stateHasError && <p className="error-text">State required!</p>}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="row MarginTop">
+                        <div className="col md12 border-right">
+                            <h6>Account/Identification</h6>
+                            <hr />
+                        </div>
+                    </div>
+
+                    <div className="row">
+                        <div className="col md6 border-right">
+                            <div className="form-group">
+                                <label className="mb-1">Account Type</label>
+                                <select name="maritalStatusType" className="form-control"
+                                    //onChange={e => setSelectedAccountType(e.target.value)}
+                                    value={enteredAccountType}
+                                    onChange={accountTypeChangeHandler}
+                                    onBlur={accountTypeBlurHandler}>
+                                    {accountTypeState}
+                                </select>
+                                {accountTypeHasError && <p className="error-text">Account type required!</p>}
+                            </div>
+                        </div>
+                        <div className="col md6 border-right">
+                            <div className="form-group">
                                 <label className="mb-1">Registration Date</label>
                                 <input type="text" className="form-control" placeholder="Enter Registration Date"
                                     value={enteredRegistrationDate}
                                     onChange={registrationDateChangeHandler}
                                     onBlur={registrationDateBlurHandler}></input>
                                 {registrationDateHasError && <p className="error-text">Registration date required!</p>}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="row">
+                        <div className="col md6 border-right">
+                            <div className="form-group">
+                                <label className="mb-1">Account Number</label>
+                                <input type="text" className="form-control" placeholder="Enter Account Number"
+                                    value={enteredAccountNo}
+                                    onChange={accountNoChangeHandler}
+                                    onBlur={accountNoBlurHandler}></input>
+                                {accountNoInputHasError && <p className="error-text">Account no required!</p>}
+                            </div>
+                        </div>
+                        <div className="col md6 border-right">
+                            <div className="form-group">
+                                <label className="mb-1">Customer Id</label>
+                                <input type="text" className="form-control" placeholder="Customer Id"></input>
                             </div>
                         </div>
                     </div>
@@ -518,116 +656,10 @@ export default function UpdateAccount() {
                             </div>
                         </div>
                         <div className="col md6 border-right">
-                            <div className="form-group">
-                                <label className="mb-1">Address</label>
-                                <input type="text" className="form-control" placeholder="Enter Address"
-                                    value={enteredAddress}
-                                    onChange={addressChangeHandler}
-                                    onBlur={addressBlurHandler}></input>
-                                {addressHasError && <p className="error-text">Address required!</p>}
-                            </div>
                         </div>
                     </div>
 
-                    <div className="row">
-                        <div className="col md6 border-right">
-                            <div className="form-group">
-                                <label className="mb-1">Contact No</label>
-                                <input type="text" className="form-control" placeholder="Enter Contact No"
-                                    value={enteredContactNo}
-                                    onChange={contactNoChangeHandler}
-                                    onBlur={contactNoBlurHandler}></input>
-                                {contactNoHasError && <p className="error-text">Contact no required!</p>}
-                            </div>
-                        </div>
-                        <div className="col md6 border-right">
-                            <div className="form-group">
-                                <label className="mb-1">Email Id</label>
-                                <input type="text" className="form-control" placeholder="Enter Email Id"
-                                    value={enteredEmail}
-                                    onChange={emailChangeHandler}
-                                    onBlur={emailBlurHandler}></input>
-                                {emailHasError && <p className="error-text">Email required!</p>}
-                            </div>
-                        </div>
-                    </div>
 
-                    <div className="row">
-                        <div className="col md6 border-right">
-                            <div className="form-group">
-                                <label className="mb-1">Marital Status</label>
-                                <select name="maritalStatusType" className="form-control"
-                                    //onChange={e => setSelectedMaritalStatus(e.target.value)}
-                                    value={enteredMaritalStatus}
-                                    onChange={maritalStatusChangeHandler}
-                                    onBlur={maritalStatusBlurHandler}>
-                                    {maritalStatusTypeState}
-                                </select>
-                                {maritalStatusHasError && <p className="error-text">Marital Status required!</p>}
-                            </div>
-                        </div>
-                        <div className="col md6 border-right">
-                            <div className="form-group">
-                                <label className="mb-1">Account Type</label>
-                                <select name="maritalStatusType" className="form-control"
-                                    //onChange={e => setSelectedAccountType(e.target.value)}
-                                    value={enteredAccountType}
-                                    onChange={accountTypeChangeHandler}
-                                    onBlur={accountTypeBlurHandler}>
-                                    {accountTypeState}
-                                </select>
-                                {accountTypeHasError && <p className="error-text">Account type required!</p>}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="row">
-                        <div className="col md6 border-right">
-                            <div className="form-group">
-                                <label className="mb-1">Citizenship</label>
-                                <select name="citizenshipType" className="form-control"
-                                    //onChange={e => setSelectedCitizenship(e.target.value)}
-                                    value={enteredCitizenshipType}
-                                    onChange={citizenshipTypeChangeHandler}
-                                    onBlur={citizenshipTypeBlurHandler}>
-                                    {citizenshipTypeState}
-                                </select>
-                                {citizenshipTypeHasError && <p className="error-text">Citizenship type required!</p>}
-                            </div>
-                        </div>
-                        <div className="col md6 border-right">
-                            <div className="form-group">
-                                <label className="mb-1">Citizen Status</label>
-                                <input type="text" className="form-control" placeholder="Enter Citizen Status"></input>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="row">
-                        <div className="col md6 border-right">
-                            <div className="form-group">
-                                <label className="mb-1">Gurdian Type</label>
-                                <select name="guardianType" className="form-control" 
-                                //onChange={e => setSelectedguardianType(e.target.value)}
-                                value={enteredGuardianType}
-                                    onChange={guardianTypeChangeHandler}
-                                    onBlur={guardianTypeBlurHandler}>
-                                    {guardianTypeState}
-                                </select>
-                                {guardianTypeHasError && <p className="error-text">Guardian type required!</p>}
-                            </div>
-                        </div>
-                        <div className="col md6 border-right">
-                            <div className="form-group">
-                                <label className="mb-1">Gurdian Name</label>
-                                <input type="text" className="form-control" placeholder="Enter Gurdian Name"
-                                 value={guardianTypeName}
-                                 onChange={guardianTypeNameChangeHandler}
-                                 onBlur={guardianTypeNameBlurHandler}></input>
-                                {guardianTypeNameHasError && <p className="error-text">Guardian name required!</p>}
-                            </div>
-                        </div>
-                    </div>
 
                     <div className="row MarginTop">
                         <div className="col md6 border-right">
