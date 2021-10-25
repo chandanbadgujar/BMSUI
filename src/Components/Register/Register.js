@@ -496,8 +496,7 @@ function getIdProofType() {
                                 <div className="form-group">
                                     <label className="mb-1">Gurdian Type</label>
                                     <select name="guardianType" className="form-control"
-                                        onChange={e => setSelectedguardianType(e.target.value)}
-                                    >
+                                        onChange={e => setSelectedguardianType(e.target.value)}>
                                         {guardianTypeState}
                                     </select>
                                 </div>
@@ -555,7 +554,7 @@ function getIdProofType() {
                             <div className="col md6 border-right">
                                 <div className="form-group">
                                     <label className="mb-1">Citizen Status</label>
-                                    <input type="text" value={citizenshipStatusState} readOnly={true} className="form-control" placeholder="Enter Citizen Status"></input>
+                                    <input type="text" value={citizenshipStatusState} readOnly={true} className="form-control" placeholder="Citizen Status"></input>
                                 </div>
                             </div>
                         </div>

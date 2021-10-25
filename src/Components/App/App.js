@@ -24,7 +24,7 @@ function App() {
           credentials: 'include'
         });
 
-        const content= await response.json();
+        const content = await response.json();
         setName(content.Username);
       }
     )();
@@ -33,11 +33,11 @@ function App() {
   return (
     <BrowserRouter>
       <div className="bg-image">
-        <Navbar name={name} setUserName={ setName }/>
+        <Navbar name={name} setUserName={setName} />
         <Switch>
-          <Route exact path="/" component={() => <Home name={name} setUserName={ setName } />}>
+          <Route exact path="/" component={() => <Home name={name} setUserName={setName} />}>
           </Route>
-          <Route path="/login" component={() => <Login name={name} setUserName={ setName } /> }>
+          <Route path="/login" component={() => <Login name={name} setUserName={setName} />}>
             {/* <Login /> */}
           </Route>
           <Route path="/register">
