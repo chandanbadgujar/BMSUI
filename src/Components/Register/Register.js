@@ -182,13 +182,6 @@ export default function Register() {
         reset: contactNoReset } = useInput(isContactNoValid);
 
     const [showCalendar, setShowCalendar] = useState(false);
-    // const {
-    //     value: enteredDob = new Date(),
-    //     isValid: dobIsValid,
-    //     hasError: dobHasError,
-    //     valueChangeHandler: dobChangeHandler,
-    //     inputBlurHandler: dobBlurHandler,
-    //     reset: dobReset } = useInput(isNotEmpty);
     const dobChangeHandler = (value) => {
         setEnteredDob(value);
         dobHasError();
