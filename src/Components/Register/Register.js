@@ -32,9 +32,11 @@ export default function Register() {
         new DropdownModel("India", 1),
         new DropdownModel("USA", 2)
     ];
-    let states = [
+    let statesInd = [
         new DropdownModel("Maharashtra", 1),
-        new DropdownModel("Goa", 2),
+        new DropdownModel("Goa", 2)
+    ];
+    let statesUs = [
         new DropdownModel("California", 3),
         new DropdownModel("Texas", 4)
     ];
@@ -66,13 +68,15 @@ export default function Register() {
     const [selectedCountryState, setSelectedCountry] = React.useState(countries[0].value);
 
     const [stateTypeState, setStateType] = React.useState('');
-    const [selectedStateState, setSelectedState] = React.useState(states[0].value);
+    const [selectedStateState, setSelectedState] = React.useState(statesInd[0].value);
 
     const [accountTypeState, setAccountType] = React.useState('');
     const [selectedAccountTypeState, setSelectedAccountType] = React.useState(accountTypes[0].value);
 
     const [idProofTypeState, setIdProofType] = React.useState('');
     const [selectedIdProofTypeState, setSelectedIdProofType] = React.useState(idProofType[0].value);
+    
+    const [formIsValidState, setformIsValidState] = React.useState(false);
     //#endregion
    
     //#region validation functions
@@ -243,8 +247,8 @@ export default function Register() {
     useEffect(() => {
         getGuardianTypes();
         getCitizenship();
-        getState();
         getCountries();
+        getState(selectedCountryState);
         getGender();
         getMaritalStatus();
         getAccountType();
@@ -274,14 +278,31 @@ function getCitizenship() {
     setCitizenshipType(citizenshipsList);
 }
 
-function getState() {
-    let statesList = states.length > 0
-        && states.map((item, i) => {
+function getState(selectedCountry) {
+    let statesList;
+
+    if(selectedCountry) {
+        selectedCountry = parseInt(selectedCountry);
+    }
+
+    if(selectedCountry === 1) {
+        statesList = statesInd.length > 0
+        && statesInd.map((item, i) => {
             return (
                 <option key={i} value={item.value}>{item.label}</option>
             )
         }, this);
 
+    } else if (selectedCountry === 2) {
+        statesList = statesUs.length > 0
+        && statesUs.map((item, i) => {
+            return (
+                <option key={i} value={item.value}>{item.label}</option>
+            )
+        }, this);
+    }
+
+    
     setStateType(statesList);
 }
 
@@ -347,12 +368,16 @@ function getIdProofType() {
 
     setIdProofType(idProofTypeList);
 }
+
+function onCountryChange(value) {
+    setSelectedCountry(value);
+
+    getState(value);
+}
 //#endregion
 
     const formSubmissionHandler = (event) => {
         event.preventDefault();
-
-        let formIsValid = false;
 
         if (nameIsValid &&
             usernameIsValid &&
@@ -368,10 +393,10 @@ function getIdProofType() {
             referenceNameIsValid &&
             referenceAccIsValid &&
             referenceAddressIsValid) {
-            formIsValid = true;
+                setformIsValidState(true);
         }
 
-        if (formIsValid) {
+        if (formIsValidState) {
             fetch("http://localhost:12296/api/User/register", {
                 method: 'POST',
                 body: JSON.stringify({
@@ -393,7 +418,7 @@ function getIdProofType() {
                     "branchName": enteredBranchName,
                     "initialDeposit": parseInt(enteredDepositAmt),
                     "identificationType":  parseInt(selectedIdProofTypeState),
-                    "identificationDocNo": selectedIdProofTypeState,
+                    "identificationDocNo": enteredIdDocNo,
                     "referralAccountName": enteredReferenceName,
                     "referralAccountNo": enteredReferenceAcc,
                     "referralAccountAddress": enteredReferenceAddress,
@@ -620,7 +645,7 @@ function getIdProofType() {
                                 <div className="form-group">
                                     <label className="mb-1">Country</label>
                                     <select name="stateType" className="form-control"
-                                        onChange={e => setSelectedCountry(e.target.value)}
+                                        onChange={e => onCountryChange(e.target.value)}
                                         >
                                         {countryTypeState}
                                     </select>
@@ -748,7 +773,8 @@ function getIdProofType() {
                             </div>
                             <div className="col md6 border-right">
                                 <div className="form-group">
-                                    <button className="btn btn-outline-primary shadow w-100">Save</button>
+                                    <button  className="btn btn-outline-primary shadow w-100">Save</button>
+                                    {/* disabled={!formIsValidState && citizenshipStatusState === 'Minor'} */}
                                 </div>
                             </div>
                         </div>

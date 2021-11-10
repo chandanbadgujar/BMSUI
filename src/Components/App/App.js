@@ -17,6 +17,7 @@ function App() {
 
   useEffect(() => {
     (
+      
       async () => {
         const response = await fetch("http://localhost:12296/api/Auth/user", {
           method: 'GET',

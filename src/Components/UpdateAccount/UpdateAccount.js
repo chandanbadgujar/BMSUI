@@ -405,6 +405,8 @@ export default function UpdateAccount() {
             fetch("http://localhost:12296/api/Account", {
                 method: 'POST',
                 body: JSON.stringify({
+                    "accountId": enteredAccountNo,
+                    "userId": customerIdState,
                     "name": enteredName,
                     "guardianType": parseInt(selectedGuardianTypeState),
                     "guardianName": parseInt(guardianTypeName),
@@ -420,11 +422,11 @@ export default function UpdateAccount() {
                     "accountType": parseInt(selectedAccountTypeState),
                     "branchName": enteredBranchName,
                     "bankName": enteredBankName,
-                    "identificationType": parseInt(selectedIdProofTypeState),
-                    "identificationDocNo": selectedIdProofTypeState,
-                    "referralAccountName": enteredReferenceName,
-                    "referralAccountNo": enteredReferenceAcc,
-                    "referralAccountAddress": enteredReferenceAddress,
+                    "identityProofType": parseInt(selectedIdProofTypeState),
+                    "identityProofDocNo": enteredIdDocNo,
+                    "referanceName": enteredReferenceName,
+                    "referenceAccountNo": enteredReferenceAcc,
+                    "referenceAddress": enteredReferenceAddress,
                 }),
                 headers: {
                     'Content-Type': 'application/json'

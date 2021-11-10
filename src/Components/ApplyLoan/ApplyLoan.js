@@ -30,6 +30,8 @@ export default function ApplyLoan() {
 
     const [loanDurationState, setLoanDuration] = React.useState([]);
     const [selectedLoanDurationState, setSelectedLoanDuration] = React.useState(loanDuration[0].value);
+    
+    const [enteredInterestRate, setInterestRate] = React.useState(loanDuration[0].value);
 
     const isNotEmpty = value => value?.trim() !== '';
 
@@ -38,8 +40,10 @@ export default function ApplyLoan() {
         if (value === '1'
             || value === '2') {
             setToggleForm(false);
+            setInterestRate(7);
         } else if (value === '3') {
             setToggleForm(true);
+            setInterestRate(5);
         }
     }
 
@@ -57,7 +61,7 @@ export default function ApplyLoan() {
         return value !== undefined;
     }
     const isAmountValid = value => {
-        var pattern = new RegExp(/^[0-9\b]+$/);
+        var pattern = new RegExp(/^[1-9\b]+$/);
         return value.trim() !== '' && pattern.test(value);
     };
     //#region useInput
@@ -69,14 +73,14 @@ export default function ApplyLoan() {
         inputBlurHandler: loanAmtBlurHandler,
         setValueHandler: setLoanAmt,
         reset: loanAmtReset } = useInput(isAmountValid);
-    const {
-        value: enteredInterestRate,
-        isValid: interestRateIsValid,
-        hasError: interestRateInputHasError,
-        valueChangeHandler: interestRateChangeHandler,
-        inputBlurHandler: interestRateBlurHandler,
-        setValueHandler: setInterestRate,
-        reset: interestRateReset } = useInput(isNotEmpty);
+    // const {
+    //     value: enteredInterestRate,
+    //     isValid: interestRateIsValid,
+    //     hasError: interestRateInputHasError,
+    //     valueChangeHandler: interestRateChangeHandler,
+    //     inputBlurHandler: interestRateBlurHandler,
+    //     setValueHandler: setInterestRate,
+    //     reset: interestRateReset } = useInput(isNotEmpty);
     const {
         value: enteredCourseFee,
         isValid: courseFeeIsValid,
@@ -186,8 +190,8 @@ export default function ApplyLoan() {
     useEffect(() => {
         getLoanType();
         getLoanDuration();
-
-        getLoanDetails();
+        setInterestRate(7);
+        //getLoanDetails();
     }, []);
 
     function getLoanType() {
@@ -363,9 +367,10 @@ export default function ApplyLoan() {
                                     <input type="text" className="form-control" placeholder="Rate of Interest"
                                         readOnly={true}
                                         value={enteredInterestRate}
-                                        onChange={interestRateChangeHandler}
-                                        onBlur={interestRateBlurHandler}></input>
-                                    {interestRateInputHasError && <p className="error-text">Interest rate required!</p>}
+                                        //onChange={interestRateChangeHandler}
+                                        //onBlur={interestRateBlurHandler}
+                                        ></input>
+                                    {/* {interestRateInputHasError && <p className="error-text">Interest rate required!</p>} */}
                                 </div>
                             </div>
                             <div className="col md6 border-right">
