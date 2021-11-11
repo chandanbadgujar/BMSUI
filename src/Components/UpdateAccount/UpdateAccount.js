@@ -409,7 +409,7 @@ export default function UpdateAccount() {
                     "userId": customerIdState,
                     "name": enteredName,
                     "guardianType": parseInt(selectedGuardianTypeState),
-                    "guardianName": parseInt(guardianTypeName),
+                    "guardianName": guardianTypeName,
                     "gender": parseInt(selectedGenderState),
                     "maritalStatus": parseInt(selectedMaritalStatusState ?? 1),
                     "dob": enteredDob,
@@ -430,6 +430,12 @@ export default function UpdateAccount() {
                 }),
                 headers: {
                     'Content-Type': 'application/json'
+                }
+            }).then((response) => {
+                if(response.ok){
+                    alert('Information updated successfully!');
+                }else{
+                    alert('Something went wrong, Please try later!');
                 }
             });
         }

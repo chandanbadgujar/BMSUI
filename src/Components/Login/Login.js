@@ -58,9 +58,13 @@ export default function Login() {
                 "username": enteredUsername,
                 "password": enteredPassword
             }),
-        }).then(() => {
+        }).then((response) => {
+            if(response.ok){
+                setRedirect(true);
+            }else{
+                alert('user not found or incorrect credentials!');
+            }
             //let response = await res.json();
-            setRedirect(true);
         });
 
     };

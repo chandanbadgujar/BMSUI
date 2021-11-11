@@ -426,9 +426,17 @@ function onCountryChange(value) {
                 headers: {
                     'Content-Type': 'application/json'
                 }
-            }).then(() => {
-                autoLoginUser();
+            }).then((response) => {
+                if(response.ok){
+                    alert('Registration completed successfully!');
+                    autoLoginUser();
+                }else{
+                    alert('Something went wrong, Please try later!');
+                }
             });
+        }
+        else{
+            alert('Please fill all fileds correctly!');
         }
 
         //TODO: POST using react-redux
